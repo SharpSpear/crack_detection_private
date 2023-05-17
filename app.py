@@ -35,6 +35,7 @@ confidence = float(st.sidebar.slider(
     "Select Detection Confidence", 25, 100, 50)) / 100
 
 model_path = str(ROOT / 'saved_model')
+print('model path', model_path)
 # Load Pre-trained ML Model
 try:
     model = helper.load_model(model_path)
@@ -48,22 +49,22 @@ if source_radio == 'Image':
     # print('soruce image', source_img)
     col1, col2 = st.columns(2)
     with col1:
-        try:
-            if source_img is None:
-                default_image_path = str(ROOT / 'test.jpg')
-                source_img = cv2.imread(default_image_path)
-                st.image(source_img, caption="Default Image",
-                            use_column_width=True)
-                uploaded_image = source_img
-            else:
-                file_bytes = np.asarray(bytearray(source_img.read()), dtype=np.uint8)
-                uploaded_image = cv2.imdecode(file_bytes, 1)
-                # uploaded_image = cv2.imread(source_img)
-                st.image(uploaded_image, caption="Uploaded Image",
-                            use_column_width=True)
-        except Exception as ex:
-            st.error("Error occurred while opening the image.")
-            st.error(ex)
+#         try:
+#             if source_img is None:
+#                 default_image_path = str(ROOT / 'test.jpg')
+#                 source_img = cv2.imread(default_image_path)
+#                 st.image(source_img, caption="Default Image",
+#                             use_column_width=True)
+#                 uploaded_image = source_img
+        if source_img:
+            file_bytes = np.asarray(bytearray(source_img.read()), dtype=np.uint8)
+            uploaded_image = cv2.imdecode(file_bytes, 1)
+            # uploaded_image = cv2.imread(source_img)
+            st.image(uploaded_image, caption="Uploaded Image",
+                        use_column_width=True)
+#         except Exception as ex:
+#             st.error("Error occurred while opening the image.")
+#             st.error(ex)
     with col2:        
         if st.sidebar.button('Detect Objects'):
             result_img = helper.result_image(confidence, model, uploaded_image)
